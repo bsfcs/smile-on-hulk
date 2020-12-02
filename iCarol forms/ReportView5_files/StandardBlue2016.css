@@ -1,0 +1,580 @@
+
+body
+{
+	font-weight: normal;
+	font-size: 10pt;
+	color: #000000;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	vertical-align: baseline;
+	direction: ltr;
+	text-align: left;
+}
+
+/*---------------------*/
+/* Text                   */
+/*---------------------*/
+
+.TextTitle
+{
+    font-weight: bold;
+    line-height: 1.2;
+    font-size: 14pt;
+    color: #000000;
+    font-style: normal;
+    font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    vertical-align: baseline;
+    direction: ltr;
+    text-align: left;
+}
+
+.TextBigger
+{
+    line-height: 1.2;
+    font-size: 12pt;
+    font-family: Arial, Verdana, Tahoma;
+     
+}
+
+.TextStatusMessage
+{
+	font-weight: normal;
+	font-size: 8pt;
+	color: #ff0000;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	vertical-align: baseline;
+	direction: ltr;
+	text-align: left;
+}
+
+.TextWatermark
+{
+    color: #808080;
+    font-style: italic;
+    border: 1px solid #c7ccdc;
+    font-size: 8pt;
+    margin-left: 0px;
+}
+
+
+/*---------------------*/
+/* Main Text            */
+/*---------------------*/
+
+.MainText
+{
+	font-weight: normal;
+	font-size: 8pt;
+	color: #000000;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	vertical-align: baseline;
+	direction: ltr;
+	text-align: left;
+}
+
+
+.MainText a:link
+{
+	font-weight: bold;
+	color: #6666cc;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	text-decoration: none;
+}
+
+.MainText a:visited
+{
+	font-weight: bold;
+	color: #9966cc;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	text-decoration: none;
+}
+
+.MainText a:active 
+{
+	font-weight: bold;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-style: normal;
+	color: #6666cc;
+}
+
+.MainText a:hover
+{
+    font-weight: bold;
+	color: #6666cc;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+    text-decoration: underline;
+}
+
+/*---------------------*/
+/* Left Menu           */
+/*---------------------*/
+
+.LeftMenu
+{
+	font-weight: normal;
+	font-size: 8pt;
+	color: #000000;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	vertical-align: baseline;
+	direction: ltr;
+	text-align: left;
+}
+
+.LeftMenu a:link, a:visited
+{
+	font-weight: bold;
+	color: #990000;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	vertical-align: middle;
+	text-align: left;
+}
+
+.LeftMenu a:hover
+{
+    background-color: #ffffff;
+    vertical-align: middle;
+	text-align: left;
+	text-decoration: underline;
+}
+
+/*Mobile*/
+.TopMenuMobile
+{
+	font-weight: normal;
+	font-size: 8pt;
+	color: #000000;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	vertical-align: baseline;
+	direction: ltr;
+	text-align: left;
+    background: #c7ccdc;
+    border:solid;
+    border-color: #aaaaaa;
+    border-width:1px;
+    padding: 7px;
+}
+.LeftMenuMobile
+{
+	font-weight: normal;
+	font-size: 8pt;
+	color: #000000;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	vertical-align: baseline;
+	direction: ltr;
+	text-align: left;
+    background: #eeeeee;
+    border:solid;
+    border-color: #dddddd;
+    border-width:1px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.LeftMenuMobile a:link, a:visited
+{
+	font-weight: bold;
+	color: #990000;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	vertical-align: middle;
+	text-align: left;
+}
+
+.LeftMenuMobile a:hover
+{
+    background-color: #ffffff;
+    vertical-align: middle;
+	text-align: left;
+	text-decoration: underline;
+}
+
+
+
+/*---------------------*/
+/*Controls              */
+/*---------------------*/
+
+.TextBox
+{
+	border: 1px solid #c7ccdc;
+    font-size: 8pt;
+	font-family: Tahoma, Verdana, Arial;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.TextBoxBigger
+{
+	border: #c7ccdc 1px solid;
+	font-size: 14pt;
+	font-weight: normal;
+	color: #000000;
+	font-style: normal;
+	font-family: Tahoma, Verdana, Arial;
+	vertical-align: baseline;
+	direction: ltr;
+	text-align: left;
+}
+
+.TextBox:focus 
+{ 
+    border:1px solid #000000; 
+    background-color: #ffffe0;
+}
+
+.Button {
+    border: 1px solid #a9a9a9;
+    font-size: 8pt;
+    font-family: Tahoma, Verdana, Arial;
+    background-color: #cccccc;
+}
+.ButtonMain {
+                -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+                -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+                box-shadow:inset 0px 1px 0px 0px #ffffff;
+                background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #f6f6f6));
+                background:-moz-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
+                background:-webkit-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
+                background:-o-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
+                background:-ms-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
+                background:linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
+                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0);
+                background-color:#ffffff;
+                -moz-border-radius:6px;
+                -webkit-border-radius:6px;
+                border-radius:6px;
+                border:1px solid #dcdcdc;
+                display:inline-block;
+                cursor:pointer;
+                color:#666666;
+                font-family:Arial;
+                font-size:11px;
+                font-weight:bold;
+                padding:6px 10px 6px 10px;
+                text-decoration:none;
+                text-shadow:0px 1px 0px #ffffff;
+}
+.ButtonMain:hover {
+                background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f6f6f6), color-stop(1, #ffffff));
+                background:-moz-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
+                background:-webkit-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
+                background:-o-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
+                background:-ms-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
+                background:linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
+                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#ffffff',GradientType=0);
+                background-color:#f6f6f6;
+}
+.ButtonMain:active {
+                position:relative;
+                top:1px;
+}
+
+.ButtonMainDisabled {
+    color: #aaaaaa;
+    background: none !important;
+    background-color: #eeeeee !important; 
+    filter: unset !important;
+    background-color: #fafafa;
+}
+
+.ButtonMainDisabled:active {
+    top: 0px;
+}
+
+.ButtonSmall {
+                -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+                -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+                box-shadow:inset 0px 1px 0px 0px #ffffff;
+                background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #f6f6f6));
+                background:-moz-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
+                background:-webkit-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
+                background:-o-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
+                background:-ms-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
+                background:linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
+                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0);
+                background-color:#ffffff;
+                -moz-border-radius:4px;
+                -webkit-border-radius:4px;
+                border-radius:4px;
+                border:1px solid #dcdcdc;
+                display:inline-block;
+                cursor:pointer;
+                color:#666666;
+                font-family:Arial;
+                font-size: 10px;
+                font-weight:bold;
+                padding: 4px 6px 4px 6px;
+                text-decoration:none;
+}
+.ButtonSmall:hover {
+                background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f6f6f6), color-stop(1, #ffffff));
+                background:-moz-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
+                background:-webkit-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
+                background:-o-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
+                background:-ms-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
+                background:linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
+                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#ffffff',GradientType=0);
+                background-color:#f6f6f6;
+}
+.ButtonSmall:active {
+                position:relative;
+                top:1px;
+}
+.ButtonNew
+{
+    border: 1px solid silver;
+    font-size: 10pt;
+	font-family: Tahoma, Verdana, Arial;
+	background-color:lavender;
+     width:100px;
+     height:30px;
+ }
+
+/* from http://www.dynamicdrive.com/style/csslibrary/item/css_oval_buttons/ */
+.ButtonOval
+{
+    /*background: transparent url('../../images/btn-oval-gray-left.gif') no-repeat top left;*/
+    display: block;
+    float: left;
+    font: normal 10px Verdana; /* Change 13px as desired */
+    line-height: 16px; /* This value + 4px + 4px (top and bottom padding of SPAN) must equal height of button background (default is 24px) */
+    height: 24px; /* Height of button background height */
+    padding-left: 11px; /* Width of left menu image */
+    text-decoration: none;
+}
+
+.ButtonOval span
+{
+    /*background: transparent url('../../images/btn-oval-gray-right.gif') no-repeat top right;*/
+    display: block;
+    padding: 6px 11px 6px 0; /*Set 11px below to match value of 'padding-left' value above*/
+    color: #000000;
+    font: normal 10px Verdana;
+    font-weight: normal;
+}
+
+.ButtonOval:hover
+{ /* Hover state CSS */
+    background-position: bottom left;
+}
+
+.ButtonOval:hover span
+{ /* Hover state CSS */
+    background-position: bottom right;
+    color: black;
+}
+
+.ButtonOvalWrapper
+{ /* Container you can use to surround a CSS button to clear float */
+    overflow: hidden; /*See: http://www.quirksmode.org/css/clearing.html */
+    width: 100%;
+}
+
+
+
+
+.Button:focus, .Button:hover
+{
+	background-color: #eeeeee;
+}
+
+
+.SectionHeader
+{
+    font-weight: bold;
+    color: black;
+    background-color: #ffffcc;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.SectionHeaderBlue
+{
+     font-weight: bold; color: White; background-color: #5d7b9d; padding: 3px; border: gray thin solid;
+}
+
+.SectionHeaderGray
+{
+    margin:2px; font-weight: bold; color: black;   padding: 4px;  
+}
+
+.AutoCompleteItems
+{
+    border-color: gray; border-width:1px; border-style:solid;padding:3px;background-color:#ffffff;color:#000000;
+}
+.AutoCompleteItemsHighlighted
+{
+    border-color: gray; border-width:1px; border-style:solid;padding:3px;background-color:#5d7b9d; color:white;
+}
+
+
+
+/*-------------------------------------- --------*/
+/*Small panels holding additional info        */
+/*like the (?) panels on ReportView4.aspx */
+/*-------------------------------------- --------*/
+.PopUpPanel
+{
+	font-size: 8pt;
+	font-family: Verdana;
+	padding-right: 2px;
+	padding-left: 2px;
+	padding-bottom: 2px;
+	padding-top: 2px;
+}
+
+/*---------------------------------*/
+/*ShiftCalendarWindows.aspx */
+/*---------------------------------*/
+.BorderOnLeft
+{
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: #808080;
+}
+
+
+/*---------------------------------*/
+/* EditReportItemFields4.aspx */
+/*---------------------------------*/
+.ClickableTextBox
+{
+	border: 0px solid Transparent;
+	background-color: Transparent;
+    font-size: 8pt;
+    text-decoration: underline;
+    color: Purple;
+	font-family: Tahoma, Verdana, Arial;
+    margin-left: 0px;
+    margin-right: 0px;
+    cursor: pointer;
+}
+.TransparentTextBox
+{
+	border: 0px solid Transparent;
+	background-color: Transparent;
+    font-size: 8pt;
+	font-family: Tahoma, Verdana, Arial;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+
+.modalBackground {
+	FILTER: alpha(opacity=70); BACKGROUND-COLOR: gray; opacity: 0.7
+}
+
+/*---------------------------------------------------*/
+/* MessagingMain Active/Inactive Conversations       */
+/*---------------------------------------------------*/
+
+a.InactiveConversation:link
+{
+	font-weight: bold;
+	color: gray;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	text-decoration: none;
+}
+
+a.InactiveConversation:visited
+{
+	font-weight: bold;
+	color: gray;
+	font-style: normal;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	text-decoration: none;
+}
+
+
+input.hdnDefaultBtn 
+{   
+    font-size:xx-small;
+    height:1px;
+    width:1px;
+}  
+
+/*---------------------------------------------------*/
+/* Call report form editor - special hyperlinks */
+/*---------------------------------------------------*/
+
+a.dummyLinkA {text-decoration: none; color:Black; cursor:default;}
+a.dummyLinkA:link {text-decoration: none; color:Black; cursor:default;}
+a.dummyLinkA:visited {text-decoration: none; color:Black; cursor:default}
+a.dummyLinkA:active {text-decoration: none; color:Black; cursor:default}
+a.dummyLinkA:hover {text-decoration: none; color:Black; cursor:default}
+
+a.blackBoldLinkA, a.blackBoldLinkA:link, a.blackBoldLinkA:visited, a.blackBoldLinkA:active 
+                    {text-decoration: underline; color:Black; font-weight: bold;}
+a.blackBoldLinkA:hover {text-decoration:underline; color:Red; font-weight: bold;}
+
+a.blueBoldLinkA, a.blueBoldLinkA:link, a.blueBoldLinkA:visited, a.blueBoldLinkA:active 
+                    {text-decoration: underline; color:Blue; font-weight: bold;}
+a.blueBoldLinkA:hover {text-decoration:underline; color:Red; font-weight: bold;}
+
+ 
+/*---------------------------------------------------*/
+/* Experiments with Responsive */
+/*---------------------------------------------------*/
+
+
+@media all and (max-width:480px) 
+{
+    #SignonPageWrapper { background:none; }
+	#SignonPageHeader { display: none; }
+    #SignonPageContent { }
+    #SignonLogo {display:normal;}
+    #SignonBottomBar { display: none; }
+    #SignonPromotion { margin-left: 0px; float:none; clear:both;}
+
+    #pnlWeather {display:none;}
+    #MasterPageWrapper { background:none; margin-top: 5px;}
+    #MasterPageHeader {display: none;}    
+    #upLeftMenu {display:none;}
+    #MasterPageContent {margin-top: 45px;}
+    
+    #MasterPageBottomBar {display:none;}
+
+    #MasterCopyright {color: #cccccc; width: 300px;}
+}
+   
+
+@media all and (min-width:481px)
+{
+        
+	#SignonPageHeader {  }
+    #SignonLogo {display:none;}
+    #SignonPageContent {margin-left: 140px;}
+    #SignonBottomBar {  }
+    #SignonPromotion {margin-left: 400px; width: 400px;}
+
+    #MasterPageWrapper {background-image: url(../../images/bg_lightgrey_wide.png); background-repeat: repeat-y; background-position: left top;} 
+    #MasterPageContent {margin-left: 140px;} 
+
+    #MasterMobileMenu { display:none; }
+    #pnlMobileMenu {display:none;}
+    #MasterMobileBottomBar { display:none; }
+
+}
+
+/* shifts/ShiftMonthView.aspx Print view */
+@media print 
+{
+    * { margin: 0px !important; padding: 0 !important;  font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;   }
+    .ShiftCalanderfooterText{ display: none; }
+}

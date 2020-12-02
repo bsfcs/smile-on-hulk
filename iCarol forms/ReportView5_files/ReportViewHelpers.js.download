@@ -1,0 +1,30 @@
+﻿function initLocationAutoComplete(txtId, mailingCountry) {
+    $('#' + txtId).autocomplete({
+        minLength: 2,
+        source: function (request, response) {
+            $.ajax({
+                url: '/secure/reports/locationsuggest.asmx/AutoCompleteLocation',
+                method: 'post',
+                dataType: 'json',
+                data: {
+                    strTerm: request.term,
+                    strCountry: mailingCountry
+                },
+                success: function (data) {
+                    response($.map(data.objs, function (item) {
+                        return { label: item.FullAddress, id: item }
+                    }))
+                },
+                error: function (err) {
+                    alert("Service error. Please contact support. ");
+                },
+            });
+        }
+    });
+
+    $('#' + txtId).on("autocompleteselect", function (event, ui) {
+        _coverageRow = ui.item.id;
+    });
+
+
+}
