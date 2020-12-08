@@ -1,0 +1,1567 @@
+﻿
+
+
+(function () {
+
+    var client = new fm.websync.client(webSyncDomain + '/websync.ashx');
+
+    client.setDisableWebSockets(true);
+
+    // disconnect the client synchronously when the page unloads
+    //client.setAutoDisconnect({
+    //    synchronous: true
+    //});   
+
+    // connect the client and show the buddy list when we're loaded
+    client.connect({
+        onSuccess: function(e) {
+            $('#buddyList').show();
+            console.log('Successfully connected');
+        },
+        onFailure: function(e) {            
+            console.log('Failure to connect client: ' + e.getException().message);
+        },
+        onStreamFailure: function(e){
+            console.log('The client could not stream: ' + e.getException().message);            
+        },
+        meta: {
+            username: app.username,
+            volnum: app.volnum,
+            orgnum: app.orgnum
+        }
+    });
+
+
+    // the rest of this stuff has to deal with the DOM, so it goes in the ready function
+    $(document).ready(function () {
+
+        // build our various templates
+        var userTemplate = $.template($('#user-template').html());
+        var groupTemplate = $.template($('#group-template').html());
+        var chatTemplate = $.template($('#chat-template').html());
+        var messageTemplate = $.template($('#message-template').html());
+
+
+        var origTitle, animatedTitle, timer;
+
+        var snd = new Audio('/internalChatSound.mp3');
+
+        function animateTitleParent() {
+            var currentState = false;
+            origTitle = document.title;
+            animatedTitle = "Internal Chat Message Recieved";
+            timer = setInterval(animateTitle, 1000);
+
+            function animateTitle() {
+                document.title = currentState ? origTitle : animatedTitle;
+                currentState = !currentState;
+            }
+
+            setTimeout(function () { clearInterval(timer); document.title = origTitle; }, 10000);
+        }
+
+        var clearChatSessionsForVol = function () {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/ClearActiveSessionsForVol',
+                data: 'orgNum=' + app.orgnum + '&volNum=' + app.volnum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    getGroups();
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var moveFriendToGroup = function (oldGroupNum, newGroupNum, friendVolNum) {
+            //If the friend is in the group, do not add them
+            if ($('#' + newGroupNum + '.group').children('#' + friendVolNum + '.user').length > 0) {
+                alert($('#' + newGroupNum + '.group').children('#' + friendVolNum + '.user').attr('name') + ' already exists in the ' + $('#' + newGroupNum + '.group').attr('name') + ' group');
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/MoveFriendToGroup',
+                data: 'orgNum=' + app.orgnum + '&volNum=' + app.volnum + '&newGroupNum=' + newGroupNum + '&oldGroupNum=' + oldGroupNum + '&friendVolNum=' + friendVolNum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    getGroups();
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var muteChat = function (chatNum) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/MuteChat',
+                data: 'chatNum=' + chatNum + '&orgNum=' + app.orgnum + '&volNum=' + app.volnum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    $('#' + chatNum).attr('muted', 'true');
+                    minimizeChat(chatNum);
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var unmuteChat = function (chatNum) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/UnmuteChat',
+                data: 'chatNum=' + chatNum + '&orgNum=' + app.orgnum + '&volNum=' + app.volnum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    $('#' + chatNum).attr('muted', 'false');
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var minimizeChat = function (chatNum) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/MinimizeChat',
+                data: 'chatNum=' + chatNum + '&orgNum=' + app.orgnum + '&volNum=' + app.volnum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    $('#' + chatNum).attr('minimized', 'true');
+                    var $header = $('#' + chatNum).children('.title');
+                    $header.siblings().hide();
+                    $header.children('.hidable').hide();
+                    $header.css('background-color', '#FFFFFF');
+                    $header.css('color', '#5D7B9D');
+                    $header.find('.close').css('background-image', 'url(/images/InternalMessaging/close-blue-16.png)');
+                    $header.find('.muted').css('background-image', 'url(/images/InternalMessaging/mute-blue-16.png)');
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var maximizeChat = function (chatNum) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/MaximizeChat',
+                data: 'chatNum=' + chatNum + '&orgNum=' + app.orgnum + '&volNum=' + app.volnum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    $('#' + chatNum).attr('minimized', 'false');
+                    var $header = $('#' + chatNum).children('.title');
+                    $header.siblings().show();
+                    $header.children('.hidable').show();
+                    $header.css('background-color', '#5D7B9D');
+                    $header.css('color', '#FFFFFF');
+                    $header.find('.close').css('background-image', 'url(/images/InternalMessaging/close-white-16.png)');
+                    $header.find('.muted').css('background-image', 'url(/images/InternalMessaging/mute-white-16.png)');
+                    $header.find('.newmessage').hide();
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var clearChatMessages = function (chatNum) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/ClearChatMessages',
+                data: 'chatNum=' + chatNum + '&orgNum=' + app.orgnum + '&volNum=' + app.volnum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    $('#' + chatNum).children('.messages').children().remove();
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+                
+        var createGroup = function (groupName) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/CreateGroup',
+                data: 'orgNum=' + app.orgnum + '&volNum=' + app.volnum + '&groupName=' + groupName,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    getGroups();
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var removeGroup = function (groupNum) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/RemoveGroup',
+                data: 'orgNum=' + app.orgnum + '&volNum=' + app.volnum + '&groupNum=' + groupNum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    getGroups();
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var copyFriendToGroup = function (groupNum, friendVolNum) {
+            //If the friend is in the group, do not add them
+            if ($('#' + groupNum + '.group').children('#' + friendVolNum + '.user').length > 0) {
+                alert($('#' + groupNum + '.group').children('#' + friendVolNum + '.user').attr('name') + ' already exists in the ' + $('#' + groupNum + '.group').attr('name') + ' group');
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/CopyFriendToGroup',
+                data: 'orgNum=' + app.orgnum + '&volNum=' + app.volnum + '&groupNum=' + groupNum + '&friendVolNum=' + friendVolNum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    getGroups();
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var removeFriendFromGroup = function (groupNum, friendVolNum) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/RemoveFriendFromGroup',
+                data: 'orgNum=' + app.orgnum + '&volNum=' + app.volnum + '&groupNum=' + groupNum + '&friendVolNum=' + friendVolNum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    getGroups();
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var collapseGroup = function (groupNum) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/CollapseGroup',
+                data: 'orgNum=' + app.orgnum + '&volNum=' + app.volnum + '&groupNum=' + groupNum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var expandGroup = function (groupNum) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/ExpandGroup',
+                data: 'orgNum=' + app.orgnum + '&volNum=' + app.volnum + '&groupNum=' + groupNum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        // 
+        var addColleagueToFriends = function () {
+            var friendVolNum = $('#hfColleagueVolNum').val();
+            $('#txtSearchContacts').val('');
+            $('#hfColleagueVolNum').val('');
+            $('#btnSearchColleagues').attr('disabled', true);
+            $('#btnSearchColleagues').css('background', 'url(/images/InternalMessaging/search-blue-16.png)');
+
+            //If the friend is in the Contacts group, do not add them
+            if ($('#contactList').children("[name = 'Contacts']").children('#' + friendVolNum).length > 0) {
+                alert($('#contactList').children("[name = 'Contacts']").children('#' + friendVolNum).attr('name') + ' already exists in the Contacts group');
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/AddColleagueToFriends',
+                data: 'orgNum=' + app.orgnum + '&volNum=' + app.volnum + '&friendVolNum=' + friendVolNum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    getGroups();
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var addMessageToDB = function (chatNum, msg) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/AddMessage',
+                data: 'chatNum=' + chatNum + '&volNum=' + app.volnum + '&message=' + msg,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    var message = new Object();
+                    message.text = msg;
+                    message.sentDate = new Date(data);
+
+                    for (var j = 0; j < chatParticipants[chatNum].length; j++) {
+                        if (chatParticipants[chatNum][j] != app.volnum) {
+                            sendMessage(chatNum, chatParticipants[chatNum][j].volNum, message);
+                        }
+                        else {
+                            //probably nothing
+                        }
+                    }
+
+                    var speaker = new Object();
+                    speaker.volNum = app.volnum;
+                    speaker.displayName = app.displayname;
+                    speaker.isOnline = true;
+                    speaker.orgNum = app.orgnum;
+
+                    logMessage(chatNum, speaker, message); 
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var addFavourite = function (friendVolNum) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/AddFavourite',
+                data: 'orgNum=' + app.orgnum + '&volNum=' + app.volnum + '&friendVolNum=' + friendVolNum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    getGroups();
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var removeFavourite = function (friendVolNum) {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/RemoveFavourite',
+                data: 'orgNum=' + app.orgnum + '&volNum=' + app.volnum + '&friendVolNum=' + friendVolNum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    getGroups();
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var getGroups = function () {
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/GetGroups',
+                data: 'orgNum=' + app.orgnum + '&volNum=' + app.volnum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (data) {
+                    $('#contactList').children().remove();
+
+                    var groups = JSON.parse(data);
+                    for (var i = 0; i < groups.length; i++) {
+                        addGroup(groups[i])
+                    }
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        }
+
+        var addGroup = function (group) {
+            if ($('#' + group.groupNum).length == 0)
+            {
+                $('#contactList').append(groupTemplate, { groupname: group.groupName, groupnum: group.groupNum });
+                if (group.isCollapsed) {
+                    $this.parent().children('.collapsed').show();
+                    $this.parent().siblings().hide();
+                    $this.hide();
+                }
+
+                var groupDetails = new Object();
+                groupDetails.groupNum = group.groupNum;
+                groupDetails.groupName = group.groupName;
+
+                for (var j = 0; j < group.friends.length; j++) {
+                    // set the user statuses
+                    var friend = group.friends[j];
+
+                    if (friend.volNum != app.volnum) {
+                        addFriend(friend, groupDetails, friend.isOnline);
+                    }
+                }
+
+                if (group.friends.length == 0) {
+                    var $foundGroup = $('#' + group.groupNum);
+
+                    var emptyDiv = document.createElement('div');
+                    emptyDiv.className = 'emptygroupplaceholder';
+
+                    var emptySpan = document.createElement('span');
+                    // cross browser support.
+                    emptySpan.textContent = 'Copy or move a friend to this group';
+
+                    emptyDiv.appendChild(emptySpan);
+                    $foundGroup.append(emptyDiv);
+                }
+            }
+        }
+
+        var getShift = function () {
+            $.ajax({
+                    type: 'POST',
+                        url : webSyncDomain + '/InternalChat/ChatService.asmx/GetShift',
+                    data: 'orgNum=' +app.orgnum + '&volNum=' +app.volnum,
+                        dataType : 'text',
+                    xhrFields: {
+                    withCredentials: true
+                    },
+                    crossDomain: true,
+                    success: function(data) {
+                        var shift = JSON.parse(data);
+                        for (var i = 0; i < groups.length; i++) {
+                            addGroup(groups[i])
+                        }
+                    },
+                    error: function (data) {
+                        if (data.responseText) {
+                            console.log(data.responseText);
+                        }
+                    }
+                });
+        }
+
+        // create the placeholder elements
+        var buildBasics = function(){
+            var chatsDiv = document.createElement('div');
+            chatsDiv.id = 'chats';
+            chatsDiv.className = 'no-print';
+            document.body.appendChild(chatsDiv);
+            
+            var buddyDiv = document.createElement('div');
+            buddyDiv.id = 'buddyList';
+            buddyDiv.className = 'no-print';
+            buddyDiv.style.display = 'none';
+            document.body.appendChild(buddyDiv);
+            
+            var headerDiv = document.createElement('div');
+            headerDiv.className = 'header';
+            headerDiv.id = 'contactHeader';
+            buddyDiv.appendChild(headerDiv);
+
+            var titleDiv = document.createElement('h4');
+            titleDiv.style.margin = "0";
+            headerDiv.appendChild(titleDiv);
+            headerDiv.onclick = toggleContacts;
+            titleDiv.innerHTML = 'Internal Chat';
+
+            var searchDiv = document.createElement('div');            
+            searchDiv.className = 'search';
+            searchDiv.id = 'contactSearch';
+
+            var txtSearchColleagues = document.getElementById('txtSearchContacts');
+            txtSearchColleagues.style.display = "inline";
+            searchDiv.appendChild(txtSearchColleagues);
+
+            var btnSearchColleagues = document.createElement('button');
+            btnSearchColleagues.id = 'btnSearchColleagues';
+            btnSearchColleagues.onclick = addColleagueToFriends;
+            btnSearchColleagues.disabled = true;
+
+            searchDiv.appendChild(btnSearchColleagues);
+            // btnSearchColleagues.className = 'context-menu-friend box menu-1';
+
+            // searchDiv.appendChild(btnSearchColleagues);
+            
+            //searchInput.className = 'input';
+            //searchInput.title = 'Find a colleague';
+            //searchInput.onclick = searchColleagues;
+            
+            //searchInput.hint();
+            //searchDiv.appendChild(document.createElement('span').appendChild(searchInput));
+
+
+            buddyDiv.appendChild(searchDiv);
+
+
+            var listDiv = document.createElement('div');
+            listDiv.className = 'list';
+            listDiv.style.height = '200px';
+            listDiv.style.overflowY = 'auto';
+            listDiv.id = 'contactList';
+            buddyDiv.appendChild(listDiv);
+
+            $('#contactHeader').siblings().hide();
+        };
+        buildBasics();
+            
+        var onlineUsers = {};
+        var chatStatusTimeoutSet = {};
+        var chatStatusTyping = {};
+
+        var contactsVisible = false;
+      
+        function toggleContacts() {
+            if (contactsVisible == true) {
+                $header = $('#contactHeader');
+                $header.siblings().hide();
+                $header.children('h4').css('background-color', '#FFFFFF');
+                $header.children('h4').css('color', '#5D7B9D');
+                //change image to white
+                contactsVisible = false;                
+            }
+            else {
+                $header = $('#contactHeader');
+                $header.siblings().show();
+                $header.children('h4').css('background-color', '#5D7B9D');
+                $header.children('h4').css('color', '#FFFFFF');
+                //change image to blue
+                contactsVisible = true;
+            }
+        }
+
+        var oldGroupNumFromClick;
+        var friendNumFromClick;
+
+        // function that controls the buddylist context menu
+        $(function () {
+            $.contextMenu({
+                selector: '.context-menu-friend',
+                trigger: 'left',
+                autoHide: true,
+                //zIndex: 10,
+                positionSubmenu: function (opt, x, y) {
+                    opt.$menu.position({
+                        my: 'right top',
+                        at: 'right bottom',
+                        of: this,
+                    });
+                },
+                build: function ($trigger, e) {
+                    var groups = $trigger.parent().parent().children('.group');
+                    var moveItems = {};
+                    var copyItems = {};
+
+                    for (var i = 0; i < groups.length; i++) {
+                        var key = 'move-' + $(groups[i]).attr('id');
+                        var groupItem = { name: $(groups[i]).attr('name') };
+                        moveItems[key] = groupItem;
+                    }
+                    for (var i = 0; i < groups.length; i++) {
+                        var key = 'copy-' + $(groups[i]).attr('id');
+                        var groupItem = { name: $(groups[i]).attr('name') };
+                        copyItems[key] = groupItem;
+                    }
+                    return {                               
+                        callback: function (key, options) {
+                            if (key == 'chat') {
+                                if ($(this).hasClass('online')) {
+
+                                    var friend = new Object()
+                                    friend.volNum = $(this).attr('id');
+                                    friend.displayName = $(this).attr('name');
+
+                                    createChatInDB(friend);
+                                }
+                            }
+                            else if (key == 'favourite') {
+                                addFavourite($(this).attr('id'));
+                            }
+                            else if (key == 'unfavourite') {
+                                removeFavourite($(this).attr('id'));
+                            }
+                            else if (key == 'remove') {
+                                var r = confirm("Are you sure you want to remove " + $(this).attr('name'));
+                                if (r == true) {
+                                    removeFriendFromGroup($(this).parent().attr('id'), $(this).attr('id'));
+                                }
+                            }
+                            else if (key.substring(0, 4) == 'move') {
+                                moveFriendToGroup(oldGroupNumFromClick, key.substring(5), friendNumFromClick);
+                            }
+                            else if (key.substring(0, 4) == 'copy') {
+                                copyFriendToGroup(key.substring(5), friendNumFromClick);
+                            }
+
+                        },
+                        items: {
+                            'remove': { name: 'Remove from group' },
+                            'move': {
+                                name: 'Move to group',
+                                items: moveItems,
+                            },
+                            'copy': {
+                                name: 'Copy to group',
+                                items: copyItems,
+                            },
+                            'sep1': '------',                            
+                            'favourite': { name: 'Add to favorites', disabled: function (key, opt) { return $(this).hasClass('favourite'); } },
+                            'unfavourite': { name: 'Remove from favorites', disabled: function (key, opt) { return !$(this).hasClass('favourite'); } },
+                            'sep2': '------',
+                            'chat': { name: 'Start a chat', disabled: function (key, opt) { return !$(this).hasClass('online'); } }
+                        }
+                    }
+
+                }
+                         
+            });
+
+        });
+
+        // function that controls the group context menu
+        $(function () {
+            $.contextMenu({
+                selector: '.context-menu-groups',
+                trigger: 'left',
+                autoHide: true,
+                callback: function (key, options) {
+                    if (key == 'remove') {
+                        removeGroup($(this).parent().parent().attr('id'));
+                    }
+                },
+                items: {
+                    'remove': { name: 'Remove group', disabled: function (key, opt) { return $(this).parent().siblings('.user').size() > 0; }  },
+                    'create': {
+                        name: 'Create group...',
+                        type: 'text',
+                        events: {
+                            keyup: function (e) {
+                                if (e.keyCode == 13) {
+                                    newGroupName = e.target.value;
+                                    if (newGroupName.trim().length > 0)
+                                    {
+                                        createGroup(newGroupName);
+                                    }
+                                    else
+                                    {
+                                        alert('Please type a name for your new group');
+                                    }                                    
+                                }
+                                else if (e.target.value.trim().length > 20) {
+                                    e.target.value = e.target.value.trim().substring(0, 20);
+                                    alert('Please type a name up to 20 characters');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // function that controls the chatwindow context menu
+        $(function () {
+            $.contextMenu({
+                selector: '.context-menu-settings',
+                trigger: 'left',
+                build: function ($trigger, e) {
+                    if ($trigger.parent().parent().attr('muted') == 'true') {
+                        var menuItems = {
+                            "unmute": { name: "Unmute Chat" },
+                            "clear": { name: "Clear Messages" }
+                        };
+                    }
+                    else {
+                        var menuItems = {
+                            "mute": { name: "Mute Chat" },
+                            "clear": { name: "Clear Messages" }
+                        };
+                    }
+                    return {
+                        callback: function (key, options) {
+                            if (key == 'mute') {
+                                muteChat($(this).parent().parent().attr('id'));
+                            }
+                            else if (key == 'unmute') {
+                                unmuteChat($(this).parent().parent().attr('id'));
+                            }
+                            else if (key == 'clear') {
+                                clearChatMessages($(this).parent().parent().attr('id'));
+                            }
+                        },
+                        events: {
+                            show: function (opt) {
+                                opt.$menu.find('.context-menu-item > span').attr('title', function () {
+                                    var curSpan = $(this).get(0);
+                                    var spansText = curSpan.innerHTML;
+                                    switch(spansText) {
+                                        case 'Mute Chat':
+                                            return 'A muted chat will stay minimized when a new message arrives';
+                                            break;
+                                        case 'Unmute Chat':
+                                            return 'An unmuted chat will maximize when a new message arrives';
+                                            break;
+                                        case 'Clear Messages':
+                                            return 'Messages will be permanently cleared from your chat window only';
+                                            break;
+                                        default:
+                                            return '';
+                                    }                                    
+                                });
+                            }
+                        },
+                        items: menuItems             
+                    }
+                   
+                }
+            });
+        });
+
+        // creates the chat interface for a given friend
+        var getChatWindow = function (chatNum, speaker, show) {           
+
+            var $foundChat = $('#' + chatNum);
+          
+            if (!$foundChat.length) {
+
+                if (chatParticipants[chatNum].length > 1) {
+                    $foundChat = createGroupChatWindow(chatNum);
+                }
+                else {
+                $foundChat = createChatWindow(chatNum, speaker);
+            }
+            }
+
+            if (show !== false) {
+                if ($foundChat.attr('muted') == 'false') {
+                    $foundChat.show();
+                    if ($foundChat.attr('minimized') == 'true') {
+                        maximizeChat(chatNum);
+                    }
+                }
+                else {
+                    if ($foundChat.attr('minimized') == 'true') {
+                        $foundChat.children('.title').animate({
+                            backgroundColor: '#E0EAF8'
+                        }, 200).animate({
+                            backgroundColor: '#FFFFFF'
+                        }).animate({
+                            backgroundColor: '#E0EAF8'
+                        }, 200).animate({
+                            backgroundColor: '#FFFFFF'
+                        });
+                        $foundChat.children('.title').find('.newmessage').show();
+                    }
+                }                
+            } else {
+                $foundChat.hide();
+            }
+            return $foundChat;
+        };
+
+        // creates the chat interface for a given friend
+        var createChatInDB = function (friend) {
+            var chatNum;
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/CreateChat',
+                data: 'orgNum=' + app.orgnum + '&volNumOne=' + app.volnum + '&volNumTwo=' + friend.volNum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function (chatNum) {
+                    if (chatNum) {
+
+                        chatParticipants[chatNum] = friend;
+
+                        var chatWindow = getChatWindow(chatNum, friend);
+                        chatWindow.find('input').focus();
+
+                        chatWindow.animate({
+                            backgroundColor: '#E0EAF8'
+                        }, 200).animate({
+                            backgroundColor: '#fff'
+                        });
+                    }                        
+                },
+                error: function (data) {
+                    if (data.responseText) {
+                        console.log(data.responseText);
+                    }
+                }
+            });
+        };
+
+        var createChatWindow = function (chatNum, friend){
+            $('#chats').append(chatTemplate, { chatNum: chatNum, friendVolNum: friend.volNum, friendDisplayName: friend.displayName });
+            $newChat = $('#' + chatNum);
+
+            friend.isOnline
+
+            // make sure we set the hint text
+            var input = $newChat.find('input[title!=""]');
+            input.hint();
+        
+            $newChat.show();
+
+            return $newChat;
+        }
+        
+        var createGroupChatWindow = function (chatNum) {
+            var friendList = '';
+            for (var i = 0; i < chatParticipants[chatNum].length; i++) {
+                if (i > 0) {
+                    friendList += ', '
+                }
+                friendList += chatParticipants[chatNum][i].displayName;
+            }
+
+            $('#chats').append(chatTemplate, { chatNum: chatNum, friendVolNum: 'Group', friendDisplayName: 'Group Chat' });
+            $newChat = $('#' + chatNum + '.chat');
+
+            $newChat.children('.title').attr('title', friendList)
+            // make sure we set the hint text
+            var input = $newChat.find('input[title!=""]');
+            input.hint();
+
+            $newChat.show();
+
+            return $newChat;
+        }
+
+        // watches for clicks on groups
+        $('#buddyList .group .groupheader .expanded, #buddyList .group .groupheader .collapsed').live('click', function () {
+            //if the group is collapsed, expand it
+            //if the group is expanded collapse it
+            $this = $(this);
+            var groupNum = $this.parent().parent().attr('id');
+            if ($this.attr('class') == 'expanded') {
+                collapseGroup(groupNum);
+                $this.parent().children('.collapsed').show();
+                $this.parent().siblings().hide();
+                $this.hide();
+            }
+            else {
+                expandGroup(groupNum)
+                $this.parent().children('.expanded').show();
+                $this.parent().siblings().show();
+                $this.hide();
+            }
+        });
+        
+        // watches for clicks on the user list
+        $('#buddyList .user').live('click', function () {
+            //set these for context menu group options
+            //this is slowly changing and might eventually not be needed.
+            friendNumFromClick = $(this).attr('id');
+            oldGroupNumFromClick = $(this).parent().attr('id');
+            return false;
+        });
+        
+        // watches for clicks on the chat window header
+        $('#chats .title').live('click', function () {
+            $this = $(this);
+            if ($this.parent().attr('minimized') == 'false') {
+                minimizeChat($this.parent().attr('id'));
+            }
+            else {
+                maximizeChat($this.parent().attr('id'));
+            }
+            return false;
+        });
+
+        // watches for enter key presses to send a message
+        $('#chats input').live('keydown', function (e) {
+            var $this = $(this);
+            var chatNum = $this.parents('.chat').attr('id');
+
+            if(e.keyCode == 13) {
+                //var $this = $(this);                                
+                //var chatNum = $this.parents('.chat').attr('id');
+                var msg = $this.attr('value');
+                // this should come from DB ideally.
+                var msg
+                if (msg.trim().length > 0) {                    
+                    sendTypingStatus(chatNum, 'NotTyping');
+
+                    //This will send the message if it is successfully added to DB
+                    addMessageToDB(chatNum, msg);
+                   
+                    $this.attr('value', '');
+                }
+                e.preventDefault();
+                return false;
+            }
+            else {
+                //Send 'user is typing' message, only every so often
+                if (setStatusTimeout(chatNum) == true) {
+                    sendTypingStatus(chatNum, 'Typing');
+                }
+            }
+        });
+
+        var sendTypingStatus = function (chatNum, status) {
+            for (var j = 0; j < chatParticipants[chatNum].length; j++) {
+                if (chatParticipants[chatNum][j].volNum != app.volnum) {
+                    var publishTo = '/users/chat/' + chatParticipants[chatNum][j].volNum;
+                    var speaker = new Object();
+                    speaker.orgNum = app.orgnum;
+                    speaker.volNum = app.volnum;
+
+                    client.publish({
+                        channel: publishTo,
+                        data: {
+                            chatNum: chatNum,
+                            speaker: speaker,
+                            type: status
+                        },
+                        onSuccess: function (e) {
+                        },
+                        onFailure: function (e) {
+                            console.log('The client could not publish to ' + publishTo + '... ' + e.getException().message);
+                        }
+                    });
+                }
+                else {
+                    //probably nothing
+                }
+            }            
+        };
+
+        var setStatusTimeout = function (chatNum) {
+            if (chatStatusTimeoutSet[chatNum] != true) {
+                chatStatusTimeoutSet[chatNum] = true;
+                window.setTimeout(function () {
+                    chatStatusTimeoutSet[chatNum] = false;
+                    sendTypingStatus(chatNum, 'NotTyping');
+                }, 5000)
+                return true;
+            }
+            return false;
+        }
+        
+        // tracks closing of the chat window
+        $('#chats .close').live('click', function(e){
+            e.stopPropagation();
+            var $this = $(this);
+            var chatNum = $this.parents('.chat').attr('id');
+            
+            var $chatWindow = $this.parents('.chat');
+            $chatWindow.hide();
+         
+            // when they close the chat, note that fact on the server;
+            // this way, we can determine which chat windows to re-open for them
+            // the next time they load a page
+            $.ajax({
+                type: 'POST',
+                url: webSyncDomain + '/InternalChat/ChatService.asmx/EndChat',
+                data: 'chatNum=' + chatNum + '&orgNum=' + app.orgnum + '&volNum=' + app.volnum,
+                dataType: 'text',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function(data){
+
+                },
+                error: function(data){
+                    if(data.responseText){
+                        console.log(data.responseText);
+                    }
+                }
+            });
+
+            //Unmute chat
+            // this aint working
+            $test = $chatWindow.attr('muted');
+            if ($chatWindow.attr('muted') == 'true') {
+                unmuteChat(chatNum);
+            }
+
+
+        });
+        
+        // adds the user in a group
+        var addFriend = function (user, group, isOnline) {
+
+            // Find group. Create if not found
+            var $foundGroup = $('#' + group.groupNum);           
+            if (!$foundGroup.length) {
+                $('#contactList').append(groupTemplate, { groupname: group.groupName, groupnum: group.groupNum });
+                $foundGroup = $('#' + group.groupNum);
+            }
+            
+            // Add user to group and set status
+            $foundGroup.append(userTemplate, { username: user.displayName, volnum: user.volNum, status: (isOnline ? 'online' : 'offline'), isfavourite: user.isFavourite ? 'favourite' : ''  });
+            
+            if (isOnline) {
+                onlineUsers[user.volNum] = true;
+            } else {
+                delete onlineUsers[user.volNum];
+            }
+
+            if (contactsVisible)
+                $('#contactHeader').siblings().show();
+            else
+                $('#contactHeader').siblings().hide();
+        };
+
+        var enableChat = function (chatNum) {
+            //$('#' + chatNum).children('div').css('background-color', '#FFFFFF');
+            $('#' + chatNum).children('.title').css('font-style', 'normal');
+            $('#' + chatNum).children('.title').css('font-weight', 'bold');
+            $('#' + chatNum).children('.textbox').find('input').prop('disabled', false);
+            $('#' + chatNum).children('.textbox').find('input').attr('title', 'Type here and press enter to chat');
+        }
+
+        var disableChat = function (chatNum) {
+            $chat = $('#' + chatNum);
+            //$('#' + chatNum).children('div').css('background-color', '#CCCCCC');
+            $chat.children('.title').css('font-style', 'italic');
+            $chat.children('.title').css('font-weight', 'normal');
+            
+            $chat.children('.textbox').find('input').attr('title', 'This user is offline');
+            $chat.children('.textbox').find('input').prop('disabled', true);
+
+            // make sure we set the hint text
+            var input = $chat.find('input[title!=""]');
+            input.hint();
+        }
+
+        var updateFriendStatus = function (user, isOnline) {           
+
+            var $foundUser = $('#' + user.volNum);
+
+            if ($foundUser.length) {
+                if (isOnline) {
+                    $foundUser.addClass('online').removeClass('offline');
+                } else {
+                    $foundUser.addClass('offline').removeClass('online');
+                }
+            }           
+
+            if (isOnline) {
+                onlineUsers[user.volNum] = true;
+
+                $('#chats').children().each(function () {
+                    if ($(this).attr('friend') == user.volNum) {
+                        enableChat($(this).attr('id'));
+                    }
+                });
+            } else {
+                delete onlineUsers[user.volNum];
+
+                $('#chats').children().each(function () {
+                    if ($(this).attr('friend') == user.volNum) {
+                        disableChat($(this).attr('id'));
+                    }
+                });
+            }
+
+            if (contactsVisible)
+                $('#contactHeader').siblings().show();
+            else
+                $('#contactHeader').siblings().hide();
+        };
+     
+        var userIsOnline = function(user){
+            return onlineUsers[user];
+        };
+        
+        // logs a chat message and automatically shows the chat window if it's not already up
+        var logMessage = function (chatNum, speaker, message, showContainer) {
+
+            //Set the status so that the receiver can message back even if the sender is not a friend
+            if (speaker.isOnline) {
+                onlineUsers[speaker.volNum] = true;
+            } else {
+                delete onlineUsers[speaker.volNum];
+            }
+
+            var formattedDate = message.sentDate.getHours() + ':' + (message.sentDate.getMinutes() < 10 ? '0' : '') + message.sentDate.getMinutes();
+
+            var speakerDisplayName = speaker.displayName;
+
+            for (var i = 0; i < chatParticipants[chatNum].length; i++)
+            {
+                if (chatParticipants[chatNum][i].volNum == speaker.volNum)
+                    speakerDisplayName = chatParticipants[chatNum][i].displayName;
+            }
+           
+            var chatWindow = getChatWindow(chatNum, speaker, showContainer).children('.messages').append(messageTemplate, { speaker: speakerDisplayName, text: message.text, sentDate: 'Sent: ' + formattedDate });
+
+            //Why do we do this twice? the message only shows up once.  I think we can delete it.
+            chatWindow.children('.messages').append(messageTemplate, { speaker: speaker.displayName, text: message.text, sentDate: 'error' });
+            // make the window scroll to the bottom to see new msgs
+            $(chatWindow).animate({ scrollTop: $(chatWindow)[0].scrollHeight }, 100)
+        };
+        
+        // sends a chat message
+        var sendMessage = function (chatNum, to, message) {
+            var publishTo = '/users/chat/' + to;
+            var speaker = new Object();
+            speaker.orgNum = app.orgnum;
+            speaker.volNum = app.volnum;
+
+            client.publish({
+                channel: publishTo,
+                data: {
+                    chatNum: chatNum,                    
+                    speaker: speaker,
+                    type: 'Message',
+                    text: message.text,
+                    sentDate: message.sentDate
+                },
+                onSuccess: function (e) {
+                },
+                onFailure: function(e) {
+                    console.log('The client could not publish to ' + publishTo + '... ' + e.getException().message);
+                }
+            });
+        };
+
+        // sends a chat change
+        var sendChange = function (chatNum, to, message) {
+            var publishTo = '/users/chatchanges/' + to;
+            var speaker = new Object();
+            speaker.orgNum = app.orgnum;
+            speaker.volNum = app.volnum;
+
+            client.publish({
+                channel: publishTo,
+                data: {
+                    chatNum: chatNum,
+                    speaker: speaker,
+                    type: 'Change',
+                    text: message.text
+                },
+                onSuccess: function (e) {
+                },
+                onFailure: function (e) {
+                    console.log('The client could not publish to ' + publishTo + '... ' + e.getException().message);
+                }
+            });
+        };
+                
+        // subscribes the client to all these channels; we could use
+        // distinct subscribe calls, but there's no real reason to in this case, since
+        // our onsuccess is just a simple dispatcher
+        client.subscribe({
+            channels: ['/users/chat/' + app.volnum, '/users/online/' + app.volnum, '/users/offline/' + app.volnum, '/users/chatchanges/' + app.volnum],
+            onSuccess: function (e) {
+                console.log('Successfully subscribed');
+
+                // Check for IC cookie                           
+                if (document.cookie.indexOf('InternalChat') > -1) {
+                } else {
+                    document.cookie = 'InternalChat=FirstConnect; path=/';
+                    clearChatSessionsForVol();                 
+                }
+
+                var initialState = e.getMeta();
+                // Set the details for the logged in user
+                //app.orgnum = e.getMeta().user.orgNum;
+                app.displayname = initialState.user.displayName;
+                app.securitylevel = initialState.user.securityLevel;
+
+                for (var i = 0; i < initialState.groups.length; i++) {
+                    addGroup(initialState.groups[i])
+                }
+                    
+                for (var i = 0; i < initialState.activeChats.length; i++) {
+                    // get the currently active chats
+                    var chat = initialState.activeChats[i];
+                    var user = null;                    
+
+                    if (chat.participants.length > 2) {
+                        participants = [];                    
+                        for (var j = 0; j < chat.participants.length; j++) {
+                            if (chat.participants[j].volNum != app.volnum) {
+                                participants.push(chat.participants[j]);
+                            }
+                            else {
+                                user = chat.participants[j];
+                            }
+                        }
+                        chatParticipants[chat.chatNum] = participants;
+
+                        var isVisible = !user.isEnded;
+                        
+                        if (user.isEnded) {
+                            continue;
+                        }
+
+                        var $newChat = getChatWindow(chat.chatNum, 0, isVisible).children('.messages').html('');
+                        if (user.isMuted) {
+                            $newChat.attr('muted') = 'true';
+                        }
+                        if (user.isMinimized) {
+                            $newChat.attr('minimized') = 'true';
+                        }
+                    }
+                    else {
+                        var friend = null;
+                        var mutedByMe = false;
+                        var mutedByOther = false;
+
+                        for (var j = 0; j < chat.participants.length; j++) {
+                            if (chat.participants[j].volNum != app.volnum) {
+                                friend = chat.participants[j];                                
+                                chatParticipants[chat.chatNum] = [chat.participants[j]];
+                                var mutedByMe = false;
+                                var mutedByOther = false;
+                            }
+                            else {
+                                user = chat.participants[j];
+                            }
+                        }
+                        var isVisible = !user.isEnded;
+                    
+                        if (user.isEnded) {
+                            continue;
+                        }
+
+                        // clear out any existing messages; this won't matter on the first
+                        // subscribe, but if we resubscribe (say the server resets) then this
+                        // will make sure we only have a copy of the messages that actually went through
+                        getChatWindow(chat.chatNum, friend, isVisible).children('.messages').html('');
+                        $newChat = $('#' + chat.chatNum);
+                        if (user.isMuted) {
+                            $newChat.attr('muted', 'true');
+                        }
+                        if (user.isMinimized) {
+                            minimizeChat(chat.chatNum);
+                        }
+                        if (friend.isOnline) {
+                            enableChat(chat.chatNum);
+                        }
+                        else {
+                            disableChat(chat.chatNum);
+                        }
+                    }
+
+                    // log the uncleared messages
+                    for(var j = 0; j < chat.messages.length; j++){
+                        var message = chat.messages[j];
+                        if (message.messageNum > user.clearedToMessageNum) {
+                            message.sentDate = new Date(message.sentDate);
+                            logMessage(message.chatNum, message.speaker, message, isVisible);
+                        }
+                    }
+                }
+            },
+            onFailure: function(e) {
+                console.log('Failed to subscribe: ' + e.getException().message);
+            },
+            onReceive: function (e) {
+                if(e.getChannel().indexOf('/online/') > -1) {
+                    // mark the user online
+                    updateFriendStatus(e.getData(), true);
+                }else if(e.getChannel().indexOf('/offline/') > -1) {
+                    // mark the user offline
+                    updateFriendStatus(e.getData(), false);
+                } else if (e.getChannel().indexOf('/chatchanges/') > -1) {
+                    
+                    var mutedByMe = false;
+                    var mutedByOther = false;
+
+                    // Update the chat participant list
+                    var chat = e.getData();
+                    participants = [];
+                    
+                    if (chat.participants.length == 2) {
+                        // Private chat
+                        for (var j = 0; j < chat.participants.length; j++) {
+                            if (chat.participants[j].volNum != app.volnum) {
+                                if (chat.participants[j].isEnded == false)
+                                mutedByOther = chat.participants[j].isMuted;
+                                participants.push(chat.participants[j]);
+                            }
+                            else {
+                                mutedByMe = chat.participants[j].isMuted;
+                            }
+                        }
+
+                        chatParticipants[chat.chatNum] = participants;
+
+                        //update chat
+
+                        // add mutedbyother icon
+                        if(mutedByOther == true) {
+                            $('#' + chat.chatNum).children('.title').find('.muted').show();
+                        }
+                        else {
+                            $('#' + chat.chatNum).children('.title').find('.muted').hide();
+                        }
+
+                        //append new displayname to hover-over
+                        var friendList = '';
+                        for (var i = 0; i < chatParticipants[chat.chatNum].length; i++) {
+                            if (i > 0) {
+                                friendList += ', ';
+                            }
+                            friendList += chatParticipants[chat.chatNum][i].displayName;
+                        }
+
+                        $('#' + chat.chatNum + '.chat .title').attr('title', friendList);
+
+                        // change header text
+                        $('#' + chat.chatNum + '.chat .title .text').text(friendList);
+
+                        //update friend attribute
+                        $('#' + chat.chatNum + '.chat').attr('friend', friendList);
+                    }
+                    else {
+                        // Group chat
+                        for (var j = 0; j < chat.participants.length; j++) {
+                            if (chat.participants[j].volNum != app.volnum) {
+                                if (chat.participants[j].isEnded == false) {
+                                    participants.push(chat.participants[j]);
+                                }
+                            }
+                            else {
+                                mutedByMe = chat.participants[j].isMuted;
+                            }
+                        }
+
+                        chatParticipants[chat.chatNum] = participants;
+
+                        //update chat
+                        if (chatParticipants[chat.chatNum].length < 2) {
+                            //update friend attribute
+                            $('#' + chat.chatNum + '.chat').attr('friend', chatParticipants[chat.chatNum][0].volNum);
+
+                            //change header text
+                            $('#' + chat.chatNum + '.chat .title .text').text(chatParticipants[chat.chatNum][0].displayName);
+                        }
+                        else {
+                            //update friend attribute
+                            $('#' + chat.chatNum + '.chat').attr('friend', 'Group');
+
+                            //change header text
+                            $('#' + chat.chatNum + '.chat .title .text').text('Group Chat');
+                        }
+
+                        //append new displayname to hover-over
+                        var friendList = '';
+                        for (var i = 0; i < chatParticipants[chat.chatNum].length; i++) {
+                            if (i > 0) {
+                                friendList += ', ';
+                            }
+                            friendList += chatParticipants[chat.chatNum][i].displayName;
+                        }
+
+                        $('#' + chat.chatNum + '.chat .title').attr('title', friendList);
+                    }
+                } else {
+                    var msg = e.getData();
+
+                    if (msg.type == 'Typing') {
+                        if (chatStatusTyping[msg.chatNum] === undefined) {
+                            chatStatusTyping[msg.chatNum] = {};
+                        }
+
+                        if (chatStatusTyping[msg.chatNum][msg.speaker.volNum] === undefined) {
+                            chatStatusTyping[msg.chatNum][msg.speaker.volNum] = {};
+
+                            for (var i = 0; i < chatParticipants[msg.chatNum].length; i++) {
+                                if (msg.speaker.volNum == chatParticipants[msg.chatNum][i].volNum) {
+                                    chatStatusTyping[msg.chatNum][msg.speaker.volNum].displayName = chatParticipants[msg.chatNum][i].displayName;
+                                    break;
+                                }
+                            }                            
+                        }
+                        
+                        chatStatusTyping[msg.chatNum][msg.speaker.volNum].isTyping = true;                        
+
+                        var typersList = "";
+                        var typersCount = 0;
+                        for (key in chatStatusTyping[msg.chatNum]) {
+                            if (chatStatusTyping[msg.chatNum][key].isTyping == true) {
+                                if (typersCount > 0) {
+                                    typersList += ', ';
+                                }
+                                typersList += chatStatusTyping[msg.chatNum][key].displayName;
+                                typersCount++;
+                            }
+                        }
+
+                        console.log(msg.speaker.displayName + ' is typing');                        
+                        $('#' + msg.chatNum + '.chat .typingStatus').text(typersList + (typersCount == 1 ? ' is' : ' are') + ' typing');
+
+                    } else if (msg.type == 'NotTyping') {
+                        console.log(msg.speaker.displayName + ' has stopped typing');
+
+                        chatStatusTyping[msg.chatNum][msg.speaker.volNum].isTyping = false;
+                        
+                        var typersList = "";
+                        var typersCount = 0;
+                        for (key in chatStatusTyping[msg.chatNum]) {
+                            if (chatStatusTyping[msg.chatNum][key].isTyping == true) {
+                                if (typersCount > 0) {
+                                    typersList += ', ';
+                                }
+                                typersList += chatStatusTyping[msg.chatNum][key].displayName;
+                                typersCount++;
+                            }
+                        }
+
+                        console.log(msg.speaker.displayName + ' is typing');
+                        if (typersCount > 0) {
+                            $('#' + msg.chatNum + '.chat .typingStatus').text(typersList + (typersCount == 1 ? ' is' : ' are') + ' typing');
+                        }
+                        else {
+                            $('#' + msg.chatNum + '.chat .typingStatus').text('');
+                        }
+                    } else {
+                        var message = new Object();
+                        message.text = msg.text;
+                        message.sentDate = msg.sentDate;
+
+                        if (!document.hasFocus()) {
+                            animateTitleParent();
+                        }
+
+                        snd.play();
+
+                        console.log("notification sound played");
+
+                        logMessage(e.getData().chatNum, e.getData().speaker, message);
+                    }
+                }
+            },
+            meta: {
+                username: app.username,
+                volnum: app.volnum,
+                orgnum: app.orgnum
+            }
+        });
+        
+    });
+})();

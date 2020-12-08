@@ -1,0 +1,90 @@
+Type.registerNamespace('iCarol.secure.Messaging');
+iCarol.secure.Messaging.MessagingHelpers=function() {
+iCarol.secure.Messaging.MessagingHelpers.initializeBase(this);
+this._timeout = 0;
+this._userContext = null;
+this._succeeded = null;
+this._failed = null;
+}
+iCarol.secure.Messaging.MessagingHelpers.prototype={
+_get_path:function() {
+ var p = this.get_path();
+ if (p) return p;
+ else return iCarol.secure.Messaging.MessagingHelpers._staticInstance.get_path();},
+NewIncomingMessageIsPending:function(iVolNum,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'NewIncomingMessageIsPending',false,{iVolNum:iVolNum},succeededCallback,failedCallback,userContext); },
+AddVolToExistingConversationWithInitialMessage:function(iConversationId,iVolNum,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'AddVolToExistingConversationWithInitialMessage',false,{iConversationId:iConversationId,iVolNum:iVolNum},succeededCallback,failedCallback,userContext); },
+AddVolToExistingConversation:function(iConversationId,iVolNum,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'AddVolToExistingConversation',false,{iConversationId:iConversationId,iVolNum:iVolNum},succeededCallback,failedCallback,userContext); },
+CreateNewConversation:function(iOrgNum,iVolNum,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'CreateNewConversation',false,{iOrgNum:iOrgNum,iVolNum:iVolNum},succeededCallback,failedCallback,userContext); },
+GetConversationGuid:function(ConversationId,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetConversationGuid',false,{ConversationId:ConversationId},succeededCallback,failedCallback,userContext); },
+LeaveConversation:function(ConversationId,UserId,IsCounselor,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'LeaveConversation',false,{ConversationId:ConversationId,UserId:UserId,IsCounselor:IsCounselor},succeededCallback,failedCallback,userContext); },
+CheckConversationStatus:function(ConversationId,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'CheckConversationStatus',true,{ConversationId:ConversationId},succeededCallback,failedCallback,userContext); },
+CheckConversationStatusByIdAndVolNum:function(ConversationId,VolNum,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'CheckConversationStatusByIdAndVolNum',true,{ConversationId:ConversationId,VolNum:VolNum},succeededCallback,failedCallback,userContext); },
+JoinConversation:function(ConversationId,UserId,IsCounselor,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'JoinConversation',false,{ConversationId:ConversationId,UserId:UserId,IsCounselor:IsCounselor},succeededCallback,failedCallback,userContext); },
+GetStateProvincesByCountry:function(strCountry,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetStateProvincesByCountry',false,{strCountry:strCountry},succeededCallback,failedCallback,userContext); },
+GetAllCoverageAreasForMessaging:function(OrgNum,OrgDivisionNum,PortalNum,ChannelType,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetAllCoverageAreasForMessaging',false,{OrgNum:OrgNum,OrgDivisionNum:OrgDivisionNum,PortalNum:PortalNum,ChannelType:ChannelType},succeededCallback,failedCallback,userContext); },
+DeleteCoverageRow:function(msgCoverageNum,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'DeleteCoverageRow',true,{msgCoverageNum:msgCoverageNum},succeededCallback,failedCallback,userContext); },
+AddMessagingCoverageRow:function(orgNum,orgDivisionNum,portalId,channelType,strCountry,strStateProvince,strCounty,strCity,strPostalCode,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'AddMessagingCoverageRow',true,{orgNum:orgNum,orgDivisionNum:orgDivisionNum,portalId:portalId,channelType:channelType,strCountry:strCountry,strStateProvince:strStateProvince,strCounty:strCounty,strCity:strCity,strPostalCode:strPostalCode},succeededCallback,failedCallback,userContext); },
+GetOrgPortalLegend:function(orgNum,volNum,sharedOrgDivs,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetOrgPortalLegend',false,{orgNum:orgNum,volNum:volNum,sharedOrgDivs:sharedOrgDivs},succeededCallback,failedCallback,userContext); },
+GetOrgConversationQueue:function(orgNum,sharedOrgDivs,volNum,orgUsesCollaboration,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetOrgConversationQueue',false,{orgNum:orgNum,sharedOrgDivs:sharedOrgDivs,volNum:volNum,orgUsesCollaboration:orgUsesCollaboration},succeededCallback,failedCallback,userContext); },
+GetQueueAlsoOnline:function(orgNum,volNum,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetQueueAlsoOnline',false,{orgNum:orgNum,volNum:volNum},succeededCallback,failedCallback,userContext); },
+GetQueueOrg:function(orgNum,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetQueueOrg',false,{orgNum:orgNum},succeededCallback,failedCallback,userContext); },
+GetUnusedCulturesByPortal:function(portalID,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetUnusedCulturesByPortal',false,{portalID:portalID},succeededCallback,failedCallback,userContext); },
+GetUsedCulturesByPortal:function(portalID,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetUsedCulturesByPortal',false,{portalID:portalID},succeededCallback,failedCallback,userContext); },
+CreateCulture:function(OrgNum,PortalID,CultureCode,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'CreateCulture',false,{OrgNum:OrgNum,PortalID:PortalID,CultureCode:CultureCode},succeededCallback,failedCallback,userContext); }}
+iCarol.secure.Messaging.MessagingHelpers.registerClass('iCarol.secure.Messaging.MessagingHelpers',Sys.Net.WebServiceProxy);
+iCarol.secure.Messaging.MessagingHelpers._staticInstance = new iCarol.secure.Messaging.MessagingHelpers();
+iCarol.secure.Messaging.MessagingHelpers.set_path = function(value) { iCarol.secure.Messaging.MessagingHelpers._staticInstance.set_path(value); }
+iCarol.secure.Messaging.MessagingHelpers.get_path = function() { return iCarol.secure.Messaging.MessagingHelpers._staticInstance.get_path(); }
+iCarol.secure.Messaging.MessagingHelpers.set_timeout = function(value) { iCarol.secure.Messaging.MessagingHelpers._staticInstance.set_timeout(value); }
+iCarol.secure.Messaging.MessagingHelpers.get_timeout = function() { return iCarol.secure.Messaging.MessagingHelpers._staticInstance.get_timeout(); }
+iCarol.secure.Messaging.MessagingHelpers.set_defaultUserContext = function(value) { iCarol.secure.Messaging.MessagingHelpers._staticInstance.set_defaultUserContext(value); }
+iCarol.secure.Messaging.MessagingHelpers.get_defaultUserContext = function() { return iCarol.secure.Messaging.MessagingHelpers._staticInstance.get_defaultUserContext(); }
+iCarol.secure.Messaging.MessagingHelpers.set_defaultSucceededCallback = function(value) { iCarol.secure.Messaging.MessagingHelpers._staticInstance.set_defaultSucceededCallback(value); }
+iCarol.secure.Messaging.MessagingHelpers.get_defaultSucceededCallback = function() { return iCarol.secure.Messaging.MessagingHelpers._staticInstance.get_defaultSucceededCallback(); }
+iCarol.secure.Messaging.MessagingHelpers.set_defaultFailedCallback = function(value) { iCarol.secure.Messaging.MessagingHelpers._staticInstance.set_defaultFailedCallback(value); }
+iCarol.secure.Messaging.MessagingHelpers.get_defaultFailedCallback = function() { return iCarol.secure.Messaging.MessagingHelpers._staticInstance.get_defaultFailedCallback(); }
+iCarol.secure.Messaging.MessagingHelpers.set_enableJsonp = function(value) { iCarol.secure.Messaging.MessagingHelpers._staticInstance.set_enableJsonp(value); }
+iCarol.secure.Messaging.MessagingHelpers.get_enableJsonp = function() { return iCarol.secure.Messaging.MessagingHelpers._staticInstance.get_enableJsonp(); }
+iCarol.secure.Messaging.MessagingHelpers.set_jsonpCallbackParameter = function(value) { iCarol.secure.Messaging.MessagingHelpers._staticInstance.set_jsonpCallbackParameter(value); }
+iCarol.secure.Messaging.MessagingHelpers.get_jsonpCallbackParameter = function() { return iCarol.secure.Messaging.MessagingHelpers._staticInstance.get_jsonpCallbackParameter(); }
+iCarol.secure.Messaging.MessagingHelpers.set_path("/secure/Messaging/MessagingHelpers.asmx");
+iCarol.secure.Messaging.MessagingHelpers.NewIncomingMessageIsPending= function(iVolNum,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.NewIncomingMessageIsPending(iVolNum,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.AddVolToExistingConversationWithInitialMessage= function(iConversationId,iVolNum,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.AddVolToExistingConversationWithInitialMessage(iConversationId,iVolNum,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.AddVolToExistingConversation= function(iConversationId,iVolNum,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.AddVolToExistingConversation(iConversationId,iVolNum,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.CreateNewConversation= function(iOrgNum,iVolNum,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.CreateNewConversation(iOrgNum,iVolNum,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.GetConversationGuid= function(ConversationId,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.GetConversationGuid(ConversationId,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.LeaveConversation= function(ConversationId,UserId,IsCounselor,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.LeaveConversation(ConversationId,UserId,IsCounselor,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.CheckConversationStatus= function(ConversationId,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.CheckConversationStatus(ConversationId,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.CheckConversationStatusByIdAndVolNum= function(ConversationId,VolNum,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.CheckConversationStatusByIdAndVolNum(ConversationId,VolNum,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.JoinConversation= function(ConversationId,UserId,IsCounselor,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.JoinConversation(ConversationId,UserId,IsCounselor,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.GetStateProvincesByCountry= function(strCountry,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.GetStateProvincesByCountry(strCountry,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.GetAllCoverageAreasForMessaging= function(OrgNum,OrgDivisionNum,PortalNum,ChannelType,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.GetAllCoverageAreasForMessaging(OrgNum,OrgDivisionNum,PortalNum,ChannelType,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.DeleteCoverageRow= function(msgCoverageNum,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.DeleteCoverageRow(msgCoverageNum,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.AddMessagingCoverageRow= function(orgNum,orgDivisionNum,portalId,channelType,strCountry,strStateProvince,strCounty,strCity,strPostalCode,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.AddMessagingCoverageRow(orgNum,orgDivisionNum,portalId,channelType,strCountry,strStateProvince,strCounty,strCity,strPostalCode,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.GetOrgPortalLegend= function(orgNum,volNum,sharedOrgDivs,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.GetOrgPortalLegend(orgNum,volNum,sharedOrgDivs,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.GetOrgConversationQueue= function(orgNum,sharedOrgDivs,volNum,orgUsesCollaboration,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.GetOrgConversationQueue(orgNum,sharedOrgDivs,volNum,orgUsesCollaboration,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.GetQueueAlsoOnline= function(orgNum,volNum,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.GetQueueAlsoOnline(orgNum,volNum,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.GetQueueOrg= function(orgNum,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.GetQueueOrg(orgNum,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.GetUnusedCulturesByPortal= function(portalID,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.GetUnusedCulturesByPortal(portalID,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.GetUsedCulturesByPortal= function(portalID,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.GetUsedCulturesByPortal(portalID,onSuccess,onFailed,userContext); }
+iCarol.secure.Messaging.MessagingHelpers.CreateCulture= function(OrgNum,PortalID,CultureCode,onSuccess,onFailed,userContext) {iCarol.secure.Messaging.MessagingHelpers._staticInstance.CreateCulture(OrgNum,PortalID,CultureCode,onSuccess,onFailed,userContext); }

@@ -1,0 +1,72 @@
+﻿/* Css Class for Modal Popup */
+
+.modalBackground
+{
+	background-color: Gray;
+	filter: alpha(opacity=70);
+	opacity: 0.7;
+}
+
+.modalPopup
+{
+	background-color: White;
+	border-width: 3px;
+	border-style: solid;
+	border-color: Gray;
+	padding: 3px;
+}
+.modalPopupInnerTable
+{
+	border-style: solid;
+	border-width: thin;
+}
+.ScheduleHeading
+{
+	font-size: xx-small;
+	font-family: Tahoma;
+	background-color: #c7ccdc;
+	font-weight: bold;
+	border-bottom: 1px solid #7FCCFF;
+	border-right: 1px solid #7FCCFF;
+	border-top: 1px solid #7FCCFF;
+	border-left: 1px solid #7FCCFF;
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr= #c7ccdc , EndColorStr= '#F5F5F5' );
+}
+.ScheduleNormal
+{
+	font-size: xx-small;
+	font-family: Tahoma;
+	text-align: center;
+	background-color: #F5F5F5;
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr= '#F5F5F5' , EndColorStr= '#aaccee');
+}
+.ScheduleNormal2
+{
+	font-size: xx-small;
+	font-family: Tahoma;
+	text-align: center;
+	background-color: #ddeeff;
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr= '#ffffff' , EndColorStr= '#ddeeff');
+}
+.ScheduleEmpty
+{
+	font-size: xx-small;
+	background-color: #F5F5F5;
+}
+.collapsePanel
+{
+	width: 100%;
+	height: 0px;
+	overflow: hidden;
+	border: solid 1px #c7ccdc;
+}
+.collapsePanelHeader
+{
+	width: 100%;
+	background-color: #c7ccdc;
+	font-weight: bold;
+	float: left;
+	padding: 5px;
+	cursor: pointer;
+	vertical-align: middle;
+}

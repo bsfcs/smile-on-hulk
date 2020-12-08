@@ -1,0 +1,84 @@
+Type.registerNamespace('iCarol.secure.Resources');
+iCarol.secure.Resources.AutoCompleteCategoryNames=function() {
+iCarol.secure.Resources.AutoCompleteCategoryNames.initializeBase(this);
+this._timeout = 0;
+this._userContext = null;
+this._succeeded = null;
+this._failed = null;
+}
+iCarol.secure.Resources.AutoCompleteCategoryNames.prototype={
+_get_path:function() {
+ var p = this.get_path();
+ if (p) return p;
+ else return iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.get_path();},
+GetCategoriesList:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetCategoriesList',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); },
+GetCategoriesJSONList:function(prefixText,iHON,count,contextKey,lang,faceted,caseSensitive,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetCategoriesJSONList',true,{prefixText:prefixText,iHON:iHON,count:count,contextKey:contextKey,lang:lang,faceted:faceted,caseSensitive:caseSensitive},succeededCallback,failedCallback,userContext); },
+GetCategoriesListFrench:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetCategoriesListFrench',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); },
+GetCategoriesListWithLinkedCategories:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetCategoriesListWithLinkedCategories',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); },
+GetCategoriesListWithLinkedCategoriesCaseSensitive:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetCategoriesListWithLinkedCategoriesCaseSensitive',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); },
+GetResourcesList:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetResourcesList',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); },
+GetResourcesJSONList:function(prefixText,iHON,count,contextKey,faceted,caseSensitive,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetResourcesJSONList',true,{prefixText:prefixText,iHON:iHON,count:count,contextKey:contextKey,faceted:faceted,caseSensitive:caseSensitive},succeededCallback,failedCallback,userContext); },
+GetResourceProgramsJSONListWithResourceAgencyNums:function(prefixText,iHON,count,contextKey,faceted,caseSensitive,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetResourceProgramsJSONListWithResourceAgencyNums',true,{prefixText:prefixText,iHON:iHON,count:count,contextKey:contextKey,faceted:faceted,caseSensitive:caseSensitive},succeededCallback,failedCallback,userContext); },
+GetResourceAgenciesAndProgramsJSONListWithResourceAgencyNums:function(prefixText,iHON,count,contextKey,faceted,caseSensitive,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetResourceAgenciesAndProgramsJSONListWithResourceAgencyNums',true,{prefixText:prefixText,iHON:iHON,count:count,contextKey:contextKey,faceted:faceted,caseSensitive:caseSensitive},succeededCallback,failedCallback,userContext); },
+GetAgenciesList:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetAgenciesList',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); },
+GetTaxonomyList:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetTaxonomyList',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); },
+GetTaxonomyJSONList:function(prefixText,iHON,count,contextKey,lang,faceted,caseSensitive,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetTaxonomyJSONList',true,{prefixText:prefixText,iHON:iHON,count:count,contextKey:contextKey,lang:lang,faceted:faceted,caseSensitive:caseSensitive},succeededCallback,failedCallback,userContext); },
+GetTaxonomyListFrench:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetTaxonomyListFrench',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); },
+GetTaxonomyListFull:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetTaxonomyListFull',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); },
+GetTaxonomyListFullFrench:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetTaxonomyListFullFrench',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); },
+GetTaxonomyListFullAllTermsNoLinked:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetTaxonomyListFullAllTermsNoLinked',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); },
+GetTaxonomyListFullWithCode:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetTaxonomyListFullWithCode',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); },
+GetCityLookupList:function(prefixText,count,contextKey,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetCityLookupList',false,{prefixText:prefixText,count:count,contextKey:contextKey},succeededCallback,failedCallback,userContext); }}
+iCarol.secure.Resources.AutoCompleteCategoryNames.registerClass('iCarol.secure.Resources.AutoCompleteCategoryNames',Sys.Net.WebServiceProxy);
+iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance = new iCarol.secure.Resources.AutoCompleteCategoryNames();
+iCarol.secure.Resources.AutoCompleteCategoryNames.set_path = function(value) { iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.set_path(value); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.get_path = function() { return iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.get_path(); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.set_timeout = function(value) { iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.set_timeout(value); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.get_timeout = function() { return iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.get_timeout(); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.set_defaultUserContext = function(value) { iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.set_defaultUserContext(value); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.get_defaultUserContext = function() { return iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.get_defaultUserContext(); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.set_defaultSucceededCallback = function(value) { iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.set_defaultSucceededCallback(value); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.get_defaultSucceededCallback = function() { return iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.get_defaultSucceededCallback(); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.set_defaultFailedCallback = function(value) { iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.set_defaultFailedCallback(value); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.get_defaultFailedCallback = function() { return iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.get_defaultFailedCallback(); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.set_enableJsonp = function(value) { iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.set_enableJsonp(value); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.get_enableJsonp = function() { return iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.get_enableJsonp(); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.set_jsonpCallbackParameter = function(value) { iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.set_jsonpCallbackParameter(value); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.get_jsonpCallbackParameter = function() { return iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.get_jsonpCallbackParameter(); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.set_path("/secure/Resources/AutoCompleteCategoryNames.asmx");
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetCategoriesList= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetCategoriesList(prefixText,count,contextKey,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetCategoriesJSONList= function(prefixText,iHON,count,contextKey,lang,faceted,caseSensitive,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetCategoriesJSONList(prefixText,iHON,count,contextKey,lang,faceted,caseSensitive,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetCategoriesListFrench= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetCategoriesListFrench(prefixText,count,contextKey,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetCategoriesListWithLinkedCategories= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetCategoriesListWithLinkedCategories(prefixText,count,contextKey,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetCategoriesListWithLinkedCategoriesCaseSensitive= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetCategoriesListWithLinkedCategoriesCaseSensitive(prefixText,count,contextKey,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetResourcesList= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetResourcesList(prefixText,count,contextKey,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetResourcesJSONList= function(prefixText,iHON,count,contextKey,faceted,caseSensitive,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetResourcesJSONList(prefixText,iHON,count,contextKey,faceted,caseSensitive,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetResourceProgramsJSONListWithResourceAgencyNums= function(prefixText,iHON,count,contextKey,faceted,caseSensitive,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetResourceProgramsJSONListWithResourceAgencyNums(prefixText,iHON,count,contextKey,faceted,caseSensitive,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetResourceAgenciesAndProgramsJSONListWithResourceAgencyNums= function(prefixText,iHON,count,contextKey,faceted,caseSensitive,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetResourceAgenciesAndProgramsJSONListWithResourceAgencyNums(prefixText,iHON,count,contextKey,faceted,caseSensitive,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetAgenciesList= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetAgenciesList(prefixText,count,contextKey,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetTaxonomyList= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetTaxonomyList(prefixText,count,contextKey,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetTaxonomyJSONList= function(prefixText,iHON,count,contextKey,lang,faceted,caseSensitive,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetTaxonomyJSONList(prefixText,iHON,count,contextKey,lang,faceted,caseSensitive,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetTaxonomyListFrench= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetTaxonomyListFrench(prefixText,count,contextKey,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetTaxonomyListFull= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetTaxonomyListFull(prefixText,count,contextKey,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetTaxonomyListFullFrench= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetTaxonomyListFullFrench(prefixText,count,contextKey,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetTaxonomyListFullAllTermsNoLinked= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetTaxonomyListFullAllTermsNoLinked(prefixText,count,contextKey,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetTaxonomyListFullWithCode= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetTaxonomyListFullWithCode(prefixText,count,contextKey,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.AutoCompleteCategoryNames.GetCityLookupList= function(prefixText,count,contextKey,onSuccess,onFailed,userContext) {iCarol.secure.Resources.AutoCompleteCategoryNames._staticInstance.GetCityLookupList(prefixText,count,contextKey,onSuccess,onFailed,userContext); }

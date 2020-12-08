@@ -1,0 +1,39 @@
+Type.registerNamespace('iCarol.secure.Resources');
+iCarol.secure.Resources.MakeReferral=function() {
+iCarol.secure.Resources.MakeReferral.initializeBase(this);
+this._timeout = 0;
+this._userContext = null;
+this._succeeded = null;
+this._failed = null;
+}
+iCarol.secure.Resources.MakeReferral.prototype={
+_get_path:function() {
+ var p = this.get_path();
+ if (p) return p;
+ else return iCarol.secure.Resources.MakeReferral._staticInstance.get_path();},
+MakeReferralOnCallReport:function(strOrgNum,strCallReportNum,strVolNum,strResourceAgencyNum,strCallerNum,strCategory1Num,strCategory2Num,strCategory3Num,strReferralStatus,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'MakeReferralOnCallReport',false,{strOrgNum:strOrgNum,strCallReportNum:strCallReportNum,strVolNum:strVolNum,strResourceAgencyNum:strResourceAgencyNum,strCallerNum:strCallerNum,strCategory1Num:strCategory1Num,strCategory2Num:strCategory2Num,strCategory3Num:strCategory3Num,strReferralStatus:strReferralStatus},succeededCallback,failedCallback,userContext); },
+DeleteResourceCulture:function(orgNum,resourceAgencyNum,cultureCode,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'DeleteResourceCulture',false,{orgNum:orgNum,resourceAgencyNum:resourceAgencyNum,cultureCode:cultureCode},succeededCallback,failedCallback,userContext); },
+CreateVerificationRequest:function(orgNumOfResources,resourceAgencyNums,cultureCodeUI,searchTerm,searchType,includeActiveButDoNotRefer,includeInactiveResources,includeNeverVerified,searchScopeField,searchAgencies,searchPrograms,searchSites,searchPS,geoFilterBy,country,stateProvince,county,city,postalCode,verifiedFromDate,verifiedUntilDate,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'CreateVerificationRequest',true,{orgNumOfResources:orgNumOfResources,resourceAgencyNums:resourceAgencyNums,cultureCodeUI:cultureCodeUI,searchTerm:searchTerm,searchType:searchType,includeActiveButDoNotRefer:includeActiveButDoNotRefer,includeInactiveResources:includeInactiveResources,includeNeverVerified:includeNeverVerified,searchScopeField:searchScopeField,searchAgencies:searchAgencies,searchPrograms:searchPrograms,searchSites:searchSites,searchPS:searchPS,geoFilterBy:geoFilterBy,country:country,stateProvince:stateProvince,county:county,city:city,postalCode:postalCode,verifiedFromDate:verifiedFromDate,verifiedUntilDate:verifiedUntilDate},succeededCallback,failedCallback,userContext); }}
+iCarol.secure.Resources.MakeReferral.registerClass('iCarol.secure.Resources.MakeReferral',Sys.Net.WebServiceProxy);
+iCarol.secure.Resources.MakeReferral._staticInstance = new iCarol.secure.Resources.MakeReferral();
+iCarol.secure.Resources.MakeReferral.set_path = function(value) { iCarol.secure.Resources.MakeReferral._staticInstance.set_path(value); }
+iCarol.secure.Resources.MakeReferral.get_path = function() { return iCarol.secure.Resources.MakeReferral._staticInstance.get_path(); }
+iCarol.secure.Resources.MakeReferral.set_timeout = function(value) { iCarol.secure.Resources.MakeReferral._staticInstance.set_timeout(value); }
+iCarol.secure.Resources.MakeReferral.get_timeout = function() { return iCarol.secure.Resources.MakeReferral._staticInstance.get_timeout(); }
+iCarol.secure.Resources.MakeReferral.set_defaultUserContext = function(value) { iCarol.secure.Resources.MakeReferral._staticInstance.set_defaultUserContext(value); }
+iCarol.secure.Resources.MakeReferral.get_defaultUserContext = function() { return iCarol.secure.Resources.MakeReferral._staticInstance.get_defaultUserContext(); }
+iCarol.secure.Resources.MakeReferral.set_defaultSucceededCallback = function(value) { iCarol.secure.Resources.MakeReferral._staticInstance.set_defaultSucceededCallback(value); }
+iCarol.secure.Resources.MakeReferral.get_defaultSucceededCallback = function() { return iCarol.secure.Resources.MakeReferral._staticInstance.get_defaultSucceededCallback(); }
+iCarol.secure.Resources.MakeReferral.set_defaultFailedCallback = function(value) { iCarol.secure.Resources.MakeReferral._staticInstance.set_defaultFailedCallback(value); }
+iCarol.secure.Resources.MakeReferral.get_defaultFailedCallback = function() { return iCarol.secure.Resources.MakeReferral._staticInstance.get_defaultFailedCallback(); }
+iCarol.secure.Resources.MakeReferral.set_enableJsonp = function(value) { iCarol.secure.Resources.MakeReferral._staticInstance.set_enableJsonp(value); }
+iCarol.secure.Resources.MakeReferral.get_enableJsonp = function() { return iCarol.secure.Resources.MakeReferral._staticInstance.get_enableJsonp(); }
+iCarol.secure.Resources.MakeReferral.set_jsonpCallbackParameter = function(value) { iCarol.secure.Resources.MakeReferral._staticInstance.set_jsonpCallbackParameter(value); }
+iCarol.secure.Resources.MakeReferral.get_jsonpCallbackParameter = function() { return iCarol.secure.Resources.MakeReferral._staticInstance.get_jsonpCallbackParameter(); }
+iCarol.secure.Resources.MakeReferral.set_path("/secure/Resources/MakeReferral.asmx");
+iCarol.secure.Resources.MakeReferral.MakeReferralOnCallReport= function(strOrgNum,strCallReportNum,strVolNum,strResourceAgencyNum,strCallerNum,strCategory1Num,strCategory2Num,strCategory3Num,strReferralStatus,onSuccess,onFailed,userContext) {iCarol.secure.Resources.MakeReferral._staticInstance.MakeReferralOnCallReport(strOrgNum,strCallReportNum,strVolNum,strResourceAgencyNum,strCallerNum,strCategory1Num,strCategory2Num,strCategory3Num,strReferralStatus,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.MakeReferral.DeleteResourceCulture= function(orgNum,resourceAgencyNum,cultureCode,onSuccess,onFailed,userContext) {iCarol.secure.Resources.MakeReferral._staticInstance.DeleteResourceCulture(orgNum,resourceAgencyNum,cultureCode,onSuccess,onFailed,userContext); }
+iCarol.secure.Resources.MakeReferral.CreateVerificationRequest= function(orgNumOfResources,resourceAgencyNums,cultureCodeUI,searchTerm,searchType,includeActiveButDoNotRefer,includeInactiveResources,includeNeverVerified,searchScopeField,searchAgencies,searchPrograms,searchSites,searchPS,geoFilterBy,country,stateProvince,county,city,postalCode,verifiedFromDate,verifiedUntilDate,onSuccess,onFailed,userContext) {iCarol.secure.Resources.MakeReferral._staticInstance.CreateVerificationRequest(orgNumOfResources,resourceAgencyNums,cultureCodeUI,searchTerm,searchType,includeActiveButDoNotRefer,includeInactiveResources,includeNeverVerified,searchScopeField,searchAgencies,searchPrograms,searchSites,searchPS,geoFilterBy,country,stateProvince,county,city,postalCode,verifiedFromDate,verifiedUntilDate,onSuccess,onFailed,userContext); }

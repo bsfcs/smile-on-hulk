@@ -1,0 +1,361 @@
+﻿@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+
+.fm-logger
+{
+    display:none; /* hidden until we need to debug something */
+}
+#chats
+{
+    background-color: transparent;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+}
+#chats h4
+{
+    margin:5px;
+}
+#chats .chat
+{
+    width:250px;
+    border:1px solid #88A4CF;
+    display:inline-block;
+    margin-left:5px;
+    margin-bottom:5px;
+    background-color: white;
+}
+#chats .chat .title
+{
+    border-bottom: 1px solid #88A4CF;
+    display: block;
+    padding: 5px;
+    width: 240px;
+    font-weight: bold;
+}
+
+#chats .chat .title span
+{
+    display:block;
+    margin:5px;
+}
+#chats .chat .title span.add
+{
+    float:right;
+    background-image:url(/images/InternalMessaging/groupadd-white-16.png);
+    cursor:pointer;
+    cursor:hand;
+    margin: 0 5px 5px 5px;
+    height:16px;
+    width:16px;
+}
+#chats .chat .title span.settings
+{
+    float:right;
+    background-image:url(/images/InternalMessaging/cog-white-16.png);
+    cursor:pointer;
+    cursor:hand;
+    margin:0 5px 5px 0;
+    height:16px;
+    width:16px;
+}
+#chats .chat .title span.close
+{
+    float:right;
+    background-image:url(/images/InternalMessaging/close-white-16.png);
+    cursor:pointer;
+    cursor:hand;
+    margin:0;
+    height:16px;
+    width:16px;
+}
+#chats .chat .title span.muted
+{
+    display:none;
+    float:right;
+    background-image:url(/images/InternalMessaging/mute-white-16.png);
+    cursor:context-menu;
+    margin:0;
+    height:16px;
+    width:16px;
+}
+#chats .chat .title span.newmessage
+{
+    display:none;
+    float:right;
+    position: absolute;
+    top: -7px;
+    left: 200px;
+    background-image:url(/images/InternalMessaging/chat-blue-16.png);
+    cursor:pointer;
+    cursor:hand;
+    margin:0;
+    height:16px;
+    width:16px;
+}
+
+#chats .chat .typingStatus
+{
+    font: 8pt Arial, Helvetica, sans-serif;
+    background-color: lightgrey;
+}
+
+#chats .chat .textbox
+{
+    border-top:1px solid #88A4CF;
+    display:block;
+    width:100%;
+}
+#chats .chat .textbox span
+{
+    display:block;
+}
+#chats .chat .textbox span input
+{
+    margin-left:auto;
+    margin-right:auto;
+    width:100%;
+    border:0;
+    padding:5px 0;
+}
+#chats .messages
+{
+    height:220px;
+    overflow:auto;
+}
+#chats .message
+{
+    margin:5px;
+}
+#chats .message .speaker
+{
+    font-weight:bold;
+}
+#chats .chat .title
+{
+    background-color: #5d7b9d;
+    color: white;
+    padding:5px;
+    cursor:pointer;
+}
+#chats .chat .addtochat
+{
+    background: url(/images/InternalMessaging/search-blue-16.png);
+    background-repeat: no-repeat;
+    /*display:block;*/
+    /*float:right;*/
+    padding: 0;
+    border: none;
+    height: 16px;
+    width: 16px;
+    margin: 1px 0 0 0;
+    vertical-align: top;
+}
+
+#chats .chat .chatsearchbar
+{
+    height: 16px;
+    width: 218px;   
+    border: 1px solid #5D7B9D;
+    vertical-align: top;
+}
+
+
+#buddyList
+{
+    background-color:white;
+    position: fixed;
+    right:5px;
+    bottom:5px;
+    border:1px solid gray;
+    
+    width:220px;
+}
+#buddyList h4
+{
+    background-color: white;
+    color: #5d7b9d;
+    padding: 5px;
+}
+#buddyList .header
+{
+    border-bottom:1px solid #88A4CF;
+    cursor:pointer;
+}
+
+#buddyList .user
+{
+    border:1px solid #eee;
+    border-width: 0 0 1px 0;
+    padding:6px;
+    position:relative;
+}
+
+#buddyList .user:hover
+{
+    background-color: #ADD8E6;
+}
+
+#buddyList .online
+{
+    cursor:hand;
+    cursor:pointer;
+}
+#buddyList .offline
+{
+    cursor:auto;
+}
+#buddyList .offline span.offline
+{
+    display:block;
+}
+#buddyList .offline span.online
+{
+    display:none;
+}
+#buddyList .online span.offline
+{
+    display:none;
+}
+#buddyList .online span.online
+{
+    display:block;
+}
+
+#buddyList .status
+{
+    float:right;
+    width:36px;
+    height:16px;
+    background-repeat:no-repeat;
+    background-position:right;
+}
+#buddyList .online .status
+{
+    /*background-image:url(/images/InternalMessaging/status_online.png);*/
+}
+#buddyList .offline .status
+{
+    /*background-image:url(/images/InternalMessaging/status_offline.png);*/    
+}
+#buddyList .offline 
+{
+    font-style: italic;
+}
+#buddyList .online 
+{
+    font-weight: bold;
+}
+#buddyList .favourite .star
+{
+    background-image:url(/images/InternalMessaging/star-black-16.png);    
+    display: block;
+    height: 16px;
+    width: 16px;
+    float:right;
+}
+#buddyList .expanded
+{
+    background-image:url(/images/InternalMessaging/triangle-down.png);    
+    display: block;
+    float: left;
+    height: 16px;
+    width: 16px;
+    margin-top: 2px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+#buddyList .collapsed
+{
+    background-image:url(/images/InternalMessaging/triangle-right.png);    
+    display: block;
+    float: left;
+    height: 16px;
+    width: 16px;
+    margin-top: 2px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+#buddyList .search input
+{
+    width: 190px;
+    overflow: hidden;
+    margin: 2px;
+    font-family: helvetica,tahoma,verdana,sans-serif;
+    border-color: #5D7B9D;
+}
+#buddyList .search button
+{
+    background: url(/images/InternalMessaging/search-blue-16.png);
+    /*display:block;*/
+    /*float:right;*/
+    padding: 0;
+    border: none;
+    height: 16px;
+    width: 16px;
+    margin: 2px;
+    vertical-align: top;
+}
+/*AutoComplete flyout */
+        
+.autocomplete_completionListElement
+{
+    margin: 0px !important;
+    background-color: inherit;
+    color: windowtext;
+    border: buttonshadow;
+    border-width: 1px;
+    border-style: solid;
+    cursor: default;
+    overflow: auto;
+    height: 200px;
+    text-align: left;
+    list-style-type: none;
+}
+
+.group .groupheader
+{
+    background-color: #e4e4e4;
+}
+.group .emptygroupplaceholder
+{
+    padding-left: 10px;
+    font-size: 10px;
+}
+#buddyList .group .collapsed
+{
+    cursor:hand;
+    cursor:pointer;
+}
+#buddyList .group .expanded
+{
+    cursor:hand;
+    cursor:pointer;
+}
+    /*
+#buddyList .offline
+{
+    cursor:auto;
+}
+#buddyList .offline span.offline
+{
+    display:block;
+}
+#buddyList .offline span.online
+{
+    display:none;
+}
+#buddyList .online span.offline
+{
+    display:none;
+}
+#buddyList .online span.online
+{
+    display:block;
+}
+*/
