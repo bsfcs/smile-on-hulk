@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # Excludes large data files
-data/
+data/SmileOn11.28.2020.csv
