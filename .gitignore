@@ -128,4 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 # Excludes large data files
-data/
+data/SmileOn11.28.2020.csv
+data/500_Cities__Local_Data_for_Better_Health__2019_release (1).csv
