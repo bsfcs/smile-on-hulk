@@ -127,5 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
 # Excludes large data files
 data/SmileOn11.28.2020.csv
